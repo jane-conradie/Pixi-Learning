@@ -1,0 +1,21 @@
+{
+  "name": "beginners",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx vite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@pixi/devtools": "^2.0.1",
+    "vite": "^7.3.0"
+  },
+  "dependencies": {
+    "pixi.js": "^8.14.3"
+  }
+}

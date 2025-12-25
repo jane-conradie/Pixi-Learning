@@ -1,0 +1,26 @@
+{
+  "bundles": [
+    {
+      "name": "memes",
+      "assets": [
+        {
+          "alias": "duck",
+          "src": "/images/duck.jpg"
+        },
+        {
+          "alias": "banana",
+          "src": "/images/banana.png"
+        }
+      ]
+    },
+    {
+      "name": "pretty",
+      "assets": [
+        {
+          "alias": "aries",
+          "src": "/images/aries.png"
+        }
+      ]
+    }
+  ]
+}
