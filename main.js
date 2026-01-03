@@ -8,7 +8,12 @@ import {
   Container,
   Spritesheet,
   AnimatedSprite,
+  TilingSprite,
+  BlurFilter,
+  NoiseFilter,
 } from "pixi.js";
+
+import { Howl } from "howler";
 
 import { initDevtools } from "@pixi/devtools";
 
@@ -17,8 +22,8 @@ import { initDevtools } from "@pixi/devtools";
 
   await app.init({
     resizeTo: window,
-    backgroundAlpha: 0.5,
-    backgroundColor: 0xffea00,
+    // backgroundAlpha: 0.5,
+    // backgroundColor: 0xffea00,
   });
 
   initDevtools({ app });
@@ -123,8 +128,8 @@ import { initDevtools } from "@pixi/devtools";
   // parent.addChild(rect2);
 
   // ASSETS
-  //   const asset = await Assets.load("/images/aries.png");
-  //   const sprite = Sprite.from(asset);
+  // const asset = await Assets.load("/images/aries.png");
+  // const sprite = Sprite.from(asset);
 
   // OR
 
@@ -175,97 +180,124 @@ import { initDevtools } from "@pixi/devtools";
   // app.stage.addChild(sprite1);
 
   // ANIMATION AND SPRITE SHEETS
-  const sheetData = {
-    frames: {
-      cry1: {
-        frame: { x: 0, y: 0, w: 64, h: 64 },
-        sourceSize: { w: 64, h: 64 },
-        spriteSourceSize: { x: 0, y: 0, w: 64, h: 64 },
-      },
-      cry2: {
-        frame: { x: 64, y: 0, w: 64, h: 64 },
-        sourceSize: { w: 64, h: 64 },
-        spriteSourceSize: { x: 0, y: 0, w: 64, h: 64 },
-      },
-      cry3: {
-        frame: { x: 128, y: 0, w: 64, h: 64 },
-        sourceSize: { w: 64, h: 64 },
-        spriteSourceSize: { x: 0, y: 0, w: 64, h: 64 },
-      },
-      cry4: {
-        frame: { x: 192, y: 0, w: 64, h: 64 },
-        sourceSize: { w: 64, h: 64 },
-        spriteSourceSize: { x: 0, y: 0, w: 64, h: 64 },
-      },
-      shock1: {
-        frame: { x: 0, y: 64, w: 64, h: 64 },
-        sourceSize: { w: 64, h: 64 },
-        spriteSourceSize: { x: 0, y: 64, w: 64, h: 64 },
-      },
-      shock2: {
-        frame: { x: 64, y: 64, w: 64, h: 64 },
-        sourceSize: { w: 64, h: 64 },
-        spriteSourceSize: { x: 0, y: 64, w: 64, h: 64 },
-      },
-      sleep1: {
-        frame: { x: 0, y: 108, w: 64, h: 86 },
-        sourceSize: { w: 64, h: 86 },
-        spriteSourceSize: { x: 0, y: 108, w: 64, h: 86 },
-      },
-      sleep2: {
-        frame: { x: 64, y: 108, w: 64, h: 86 },
-        sourceSize: { w: 64, h: 86 },
-        spriteSourceSize: { x: 0, y: 108, w: 64, h: 86 },
-      },
-      sleep3: {
-        frame: { x: 128, y: 108, w: 64, h: 86 },
-        sourceSize: { w: 64, h: 86 },
-        spriteSourceSize: { x: 0, y: 108, w: 64, h: 86 },
-      },
-      sleep4: {
-        frame: { x: 192, y: 108, w: 64, h: 86 },
-        sourceSize: { w: 64, h: 86 },
-        spriteSourceSize: { x: 0, y: 108, w: 64, h: 86 },
-      },
-    },
-    meta: {
-      image: "/public/spritesheets/FreeSprites.png",
-      size: { w: 256, h: 435 },
-    },
-    animations: {
-      cry: ["cry1", "cry2", "cry3", "cry4"],
-      shock: ["shock1", "shock2"],
-      sleep: ["sleep1", "sleep2", "sleep3", "sleep4"],
-    },
-  };
+  // const sheetData = {
+  //   frames: {
+  //     cry1: {
+  //       frame: { x: 0, y: 0, w: 64, h: 64 },
+  //       sourceSize: { w: 64, h: 64 },
+  //       spriteSourceSize: { x: 0, y: 0, w: 64, h: 64 },
+  //     },
+  //     cry2: {
+  //       frame: { x: 64, y: 0, w: 64, h: 64 },
+  //       sourceSize: { w: 64, h: 64 },
+  //       spriteSourceSize: { x: 0, y: 0, w: 64, h: 64 },
+  //     },
+  //     cry3: {
+  //       frame: { x: 128, y: 0, w: 64, h: 64 },
+  //       sourceSize: { w: 64, h: 64 },
+  //       spriteSourceSize: { x: 0, y: 0, w: 64, h: 64 },
+  //     },
+  //     cry4: {
+  //       frame: { x: 192, y: 0, w: 64, h: 64 },
+  //       sourceSize: { w: 64, h: 64 },
+  //       spriteSourceSize: { x: 0, y: 0, w: 64, h: 64 },
+  //     },
+  //     shock1: {
+  //       frame: { x: 0, y: 64, w: 64, h: 64 },
+  //       sourceSize: { w: 64, h: 64 },
+  //       spriteSourceSize: { x: 0, y: 64, w: 64, h: 64 },
+  //     },
+  //     shock2: {
+  //       frame: { x: 64, y: 64, w: 64, h: 64 },
+  //       sourceSize: { w: 64, h: 64 },
+  //       spriteSourceSize: { x: 0, y: 64, w: 64, h: 64 },
+  //     },
+  //     sleep1: {
+  //       frame: { x: 0, y: 108, w: 64, h: 86 },
+  //       sourceSize: { w: 64, h: 86 },
+  //       spriteSourceSize: { x: 0, y: 108, w: 64, h: 86 },
+  //     },
+  //     sleep2: {
+  //       frame: { x: 64, y: 108, w: 64, h: 86 },
+  //       sourceSize: { w: 64, h: 86 },
+  //       spriteSourceSize: { x: 0, y: 108, w: 64, h: 86 },
+  //     },
+  //     sleep3: {
+  //       frame: { x: 128, y: 108, w: 64, h: 86 },
+  //       sourceSize: { w: 64, h: 86 },
+  //       spriteSourceSize: { x: 0, y: 108, w: 64, h: 86 },
+  //     },
+  //     sleep4: {
+  //       frame: { x: 192, y: 108, w: 64, h: 86 },
+  //       sourceSize: { w: 64, h: 86 },
+  //       spriteSourceSize: { x: 0, y: 108, w: 64, h: 86 },
+  //     },
+  //   },
+  //   meta: {
+  //     image: "/public/spritesheets/FreeSprites.png",
+  //     size: { w: 256, h: 435 },
+  //   },
+  //   animations: {
+  //     cry: ["cry1", "cry2", "cry3", "cry4"],
+  //     shock: ["shock1", "shock2"],
+  //     sleep: ["sleep1", "sleep2", "sleep3", "sleep4"],
+  //   },
+  // };
 
   // load sheet image as texture
-  const sheetTexture = await Assets.load(sheetData.meta.image);
+  //const sheetTexture = await Assets.load(sheetData.meta.image);
 
   // create sprite sheet with texture and sheet data
-  const sheet = new Spritesheet(sheetTexture, sheetData);
+  //const sheet = new Spritesheet(sheetTexture, sheetData);
 
   // apply configurations
-  await sheet.parse();
+  //await sheet.parse();
 
   // display sprite from sheet
-  const crying = new AnimatedSprite(sheet.animations.cry);
+  // const crying = new AnimatedSprite(sheet.animations.cry);
 
-  const shock = new AnimatedSprite(sheet.animations.shock);
+  // const shock = new AnimatedSprite(sheet.animations.shock);
 
-  const sleep = new AnimatedSprite(sheet.animations.sleep);
+  // const sleep = new AnimatedSprite(sheet.animations.sleep);
 
-  app.stage.addChild(crying);
-  app.stage.addChild(shock);
-  app.stage.addChild(sleep);
+  // app.stage.addChild(crying);
+  // app.stage.addChild(shock);
+  // app.stage.addChild(sleep);
 
   // play animations
-  crying.play();
-  shock.play();
-  sleep.play();
+  // crying.play();
+  // shock.play();
+  // sleep.play();
 
   // tweak animations
-  crying.animationSpeed = 0.13;
-  shock.animationSpeed = 0.06;
-  sleep.animationSpeed = 0.05;
+  // crying.animationSpeed = 0.13;
+  // shock.animationSpeed = 0.06;
+  // sleep.animationSpeed = 0.05;
+
+  // TILING SPRITES
+  const bg = await Assets.load("https://i.imgur.com/LBTK8dw.png");
+
+  const bgTile = new TilingSprite({
+    texture: bg,
+    width: app.screen.width,
+    height: app.screen.height,
+  });
+
+  app.stage.addChild(bgTile);
+
+  app.ticker.add(function () {
+    bgTile.tilePosition.x -= 1;
+  });
+
+  // FILTERS
+  bgTile.filters = [new BlurFilter({ strength: 5 })];
+
+  // AUDIO - not built-in, use howler
+  const mainTheme = new Howl({
+    src: ["/public/audio/Witch Theme.wav"],
+    volume: 0.2,
+    loop: true,
+  });
+
+  mainTheme.play();
 })();
